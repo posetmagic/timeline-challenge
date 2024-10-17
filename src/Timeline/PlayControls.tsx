@@ -1,7 +1,7 @@
 // PlayControls.tsx
 
 import React, { useCallback } from "react";
-import { clampAndRound } from "./utils";
+import { clampAndRound } from "../utils/utils";
 
 type PlayControlsProps = {
   time: number;
