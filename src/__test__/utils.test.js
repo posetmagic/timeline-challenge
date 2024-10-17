@@ -5,7 +5,7 @@ import { clampAndRound } from '../utils/utils';
 describe('clampAndRound Utility Function', () => {
 
     test('should clamp and round value with step 10', () => {
-        expect(clampAndRound(-1, 0, 50, 10)).toBeCloseTo(0, 5);   // Clamped to min
+        expect(clampAndRound(-1, 0, 50, 10)).toBeCloseTo(0, 5); // possible +0 or -0
         expect(clampAndRound(15, 10, 50, 10)).toBe(20); // Rounds down to 10
         expect(clampAndRound(25, 0, 50, 10)).toBe(30); // Rounds up to 30
         expect(clampAndRound(49, 10, 50, 10)).toBe(50); // Clamped to max

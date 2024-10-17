@@ -1,0 +1,11 @@
+services:
+  phase-hw:
+    build:
+      context: .
+    container_name: phase-hw
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./src/:/app/src/
