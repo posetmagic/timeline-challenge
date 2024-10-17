@@ -6,6 +6,7 @@ import { configureStore } from '@reduxjs/toolkit';
 // Define the initial state of the time and scrolls
 interface TimeState {
   current: number;
+  duration: number;
 }
 
 interface ScrollState {
@@ -16,6 +17,7 @@ interface ScrollState {
 // Initial states
 const initialTimeState: TimeState = {
   current: 0,
+  duration: 2000,
 };
 
 const initialScrollState: ScrollState = {
@@ -30,6 +32,9 @@ const timeSlice = createSlice({
   reducers: {
     setTime: (state, action: PayloadAction<number>) => {
       state.current = action.payload;
+    },
+    setDuration: (state, action: PayloadAction<number>) => { // Add this reducer for duration
+      state.duration = action.payload;
     },
   },
 });
@@ -49,7 +54,7 @@ const scrollSlice = createSlice({
 });
 
 // Export the actions
-export const { setTime } = timeSlice.actions;
+export const { setTime, setDuration } = timeSlice.actions;
 export const { setVerticalScroll, setHorizontalScroll } = scrollSlice.actions;
 
 // Create and configure the Redux store
