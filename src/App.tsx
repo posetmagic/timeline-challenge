@@ -2,7 +2,8 @@
 
 import { Provider } from "react-redux";
 import { Timeline } from "./Timeline";
-import store from "./Timeline/TimeState.store"; // Import the Redux store
+import store from "./Timeline/TimeState.store";
+import { BarUI } from "./Timeline/BarUI";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
           <p className="text-gray-300">Please follow the instructions in the README.md.</p>
           <p className="text-gray-300">Time</p> {/* for pass test case */}
         </div>
+        <BarUI />
         <Timeline />
       </div>
     </Provider>
