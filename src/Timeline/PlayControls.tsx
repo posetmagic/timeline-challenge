@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setTime } from "./TimeState.store";
+import { setTime } from "./State.store";
 import { clampAndRound } from "../utils/utils";
 
 export const PlayControls: React.FC = () => {

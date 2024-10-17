@@ -1,45 +1,39 @@
-//TrackList.tsx
+// TrackList.tsx
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setVerticalScroll } from './State.store'; // Adjust the import path as needed
 
 export const TrackList = () => {
-  // TODO: implement scroll sync with `KeyframeList`
+  const dispatch = useDispatch();
+  const verticalScroll = useSelector((state: any) => state.scroll.vertical); // Replace 'any' with your state type
+
+  useEffect(() => {
+    // Set the scroll position when the component mounts
+    const container = document.getElementById('track-list');
+    if (container) {
+      container.scrollTop = verticalScroll;
+    }
+  }, [verticalScroll]);
+
+  const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop } = event.currentTarget;
+    dispatch(setVerticalScroll(scrollTop));
+  };
 
   return (
     <div
+      id="track-list"
       className="grid grid-flow-row auto-rows-[40px]
       border-r border-solid border-r-gray-700 
       overflow-auto"
       data-testid="track-list"
+      onScroll={handleScroll}
     >
-      <div className="p-2">
-        <div>Track A</div>
-      </div>
-      <div className="p-2">
-        <div>Track B</div>
-      </div>
-      <div className="p-2">
-        <div>Track C</div>
-      </div>
-      <div className="p-2">
-        <div>Track D</div>
-      </div>
-      <div className="p-2">
-        <div>Track E</div>
-      </div>
-      <div className="p-2">
-        <div>Track F </div>
-      </div>
-      <div className="p-2">
-        <div>Track G</div>
-      </div>
-      <div className="p-2">
-        <div>Track H</div>
-      </div>
-      <div className="p-2">
-        <div>Track I </div>
-      </div>
-      <div className="p-2">
-        <div>Track J</div>
-      </div>
+      {['Track A', 'Track B', 'Track C', 'Track D', 'Track E', 'Track F', 'Track G', 'Track H', 'Track I', 'Track J'].map((track) => (
+        <div className="p-2" key={track}>
+          <div>{track}</div>
+        </div>
+      ))}
     </div>
   );
 };

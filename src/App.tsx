@@ -2,7 +2,7 @@
 
 import { Provider } from "react-redux";
 import { Timeline } from "./Timeline";
-import store from "./Timeline/TimeState.store";
+import store from "./Timeline/State.store";
 import { BarUI } from "./Timeline/BarUI";
 
 export default function App() {
