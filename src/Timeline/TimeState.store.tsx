@@ -5,21 +5,21 @@ import { configureStore } from '@reduxjs/toolkit';
 
 // Define the initial state of the time
 interface TimeState {
-  time: number;
+  current: number;
 }
 
 // Initial state
 const initialState: TimeState = {
-  time: 0,
+  current: 0,
 };
 
 // Create a slice of the Redux store
 const timeSlice = createSlice({
-  name: 'time',
+  name: 'time',  // This should be the name of the slice, e.g., 'time'
   initialState,
   reducers: {
     setTime: (state, action: PayloadAction<number>) => {
-      state.time = action.payload;
+      state.current = action.payload;
     },
   },
 });
@@ -30,7 +30,7 @@ export const { setTime } = timeSlice.actions;
 // Create and configure the Redux store
 const store = configureStore({
   reducer: {
-    time: timeSlice.reducer,
+    time: timeSlice.reducer,  // Use the slice name or an appropriate key here, like 'time'
   },
 });
 

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 export const Playhead = () => {
   // Use useSelector to get the time from the Redux store
-  const time = useSelector((state: any) => state.time.time); // Adjust type according to your store
+  const time = useSelector((state: any) => state.time.current); // Adjust type according to your store
 
   return (
     <div

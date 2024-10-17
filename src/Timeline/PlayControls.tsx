@@ -9,7 +9,7 @@ export const PlayControls: React.FC = () => {
   const dispatch = useDispatch();
 
   // Get the current time from the Redux store
-  const time = useSelector((state: any) => state.time.time); // Adjust type according to your store
+  const time_current = useSelector((state: any) => state.time.current); // Adjust type according to your store
 
   const MIN_CURRENT = 0;   // Minimum time in seconds
   const MAX_CURRENT = 2000; // Maximum time in seconds
@@ -41,7 +41,7 @@ export const PlayControls: React.FC = () => {
           min={MIN_CURRENT}
           max={MAX_CURRENT}
           step={STEP_CURRENT}
-          value={time}
+          value={time_current}
           onChange={onTimeChange}
         />
       </fieldset>
