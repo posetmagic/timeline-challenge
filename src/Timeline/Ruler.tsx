@@ -53,8 +53,7 @@ export const Ruler = () => {
       const clickPosition = event instanceof MouseEvent
         ? event.clientX - left - 15 // If event is a MouseEvent
         : event.nativeEvent.clientX - left - 15; // Otherwise, extract from native event
-      const currentTime = Math.max(0, Math.min(clickPosition + horizontalScroll, duration)); // Ensure it's within bounds
-      dispatch(setCurrent(currentTime)); // Update the current time in Redux
+      dispatch(setCurrent(clickPosition)); // Update the current time in Redux
     }
   };
 
