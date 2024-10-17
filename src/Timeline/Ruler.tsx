@@ -7,6 +7,11 @@ import { setHorizontalScroll } from './State.store'; // Adjust the import path a
 export const Ruler = () => {
   const dispatch = useDispatch();
   const horizontalScroll = useSelector((state: any) => state.scroll.horizontal); // Replace 'any' with your state type
+  const duration = useSelector((state: any) => state.time.duration); // Get duration from Redux
+
+
+  // Calculate the width based on the duration
+  const rulerWidth = duration;
 
   useEffect(() => {
     // Set the scroll position when the component mounts
@@ -30,7 +35,11 @@ export const Ruler = () => {
       data-testid="ruler"
       onScroll={handleScroll}
     >
-      <div className="w-[2000px] h-6 rounded-md bg-white/25" data-testid="ruler-bar"></div>
+      <div
+        className="h-6 rounded-md bg-white/25"
+        style={{ width: `${rulerWidth}px` }}
+        data-testid="ruler-bar"
+      ></div>
     </div>
   );
 };
