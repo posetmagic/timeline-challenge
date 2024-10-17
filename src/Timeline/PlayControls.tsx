@@ -2,60 +2,93 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setTime } from "./State.store";
+import { setTime, setDuration } from "./State.store";
 import { clampAndRound } from "../utils/utils";
 
 export const PlayControls: React.FC = () => {
   const dispatch = useDispatch();
-  
-  // Get the current time from the Redux store
-  const time_current = useSelector((state: any) => state.time.current); // Adjust type according to your store
 
-  const MIN_TIME = 0;
+  // Get the current time and duration from the Redux store
+  const time_current = useSelector((state: any) => state.time.current);
+  const time_duration = useSelector((state: any) => state.time.duration);
+
+  const MIN_CURRENT = 0;
+  const MIN_DURATION = 100;
   const MAX_TIME = 6000;
   const STEP_TIME = 10;
 
-  // Local state for the input value
+  // Local state for the input values
   const [inputCurrent, setinputCurrent] = useState<string>(time_current.toString());
+  const [inputDuration, setinputDuration] = useState<string>(time_duration.toString());
 
   // Update local inputCurrent state when time_current changes
   useEffect(() => {
     setinputCurrent(time_current.toString());
   }, [time_current]);
 
+  // Update local inputDuration state when time_duration changes
+  useEffect(() => {
+    setinputDuration(time_duration.toString());
+  }, [time_duration]);
+
+  // Handle current time input change
   const onInputChangeCurrent = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Update local state with current input value
     setinputCurrent(e.target.value);
   };
 
-  const onInputBlurCurrent = useCallback(() => {
-    const newTimeCurrent = parseInt(inputCurrent, 10); // Parse the input value
+  // Handle duration input change
+  const onInputChangeDuration = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setinputDuration(e.target.value);
+  };
 
-    // Ensure the parsed value is a number
+  const onInputBlurCurrent = useCallback(() => {
+    const newTimeCurrent = parseInt(inputCurrent, 10);
+
     if (isNaN(newTimeCurrent)) {
-      // If not a number, reset to 0
-      dispatch(setTime(MIN_TIME));
-      setinputCurrent(MIN_TIME.toString());
+      dispatch(setTime(MIN_CURRENT));
+      setinputCurrent(MIN_CURRENT.toString());
       return;
     }
 
-    // Adjust the time according to the constraints
-    const adjustedTimeCurrent = clampAndRound(newTimeCurrent, MIN_TIME, MAX_TIME, STEP_TIME);
-    
-    // Dispatch the setTime action to update the time in the store
+    const adjustedTimeCurrent = clampAndRound(newTimeCurrent, MIN_CURRENT, MAX_TIME, STEP_TIME);
+
     dispatch(setTime(adjustedTimeCurrent));
-    setinputCurrent(adjustedTimeCurrent.toString()); // Update inputCurrent with the adjusted time
+    setinputCurrent(adjustedTimeCurrent.toString());
   }, [dispatch, inputCurrent]);
 
+  // Similar handler for when duration input loses focus
+  const onInputBlurDuration = useCallback(() => {
+    const newTimeDuration = parseInt(inputDuration, 10);
+
+    if (isNaN(newTimeDuration)) {
+      dispatch(setDuration(MIN_DURATION));
+      setinputDuration(MIN_DURATION.toString());
+      return;
+    }
+
+    const adjustedTimeDuration = clampAndRound(newTimeDuration, MIN_DURATION, MAX_TIME, STEP_TIME); // Use MIN_DURATION
+
+    dispatch(setDuration(adjustedTimeDuration)); // Dispatch the setDuration action
+    setinputDuration(adjustedTimeDuration.toString()); // Update inputDuration with the adjusted value
+  }, [dispatch, inputDuration]);
+
   const onInputFocusCurrent = (e: React.FocusEvent<HTMLInputElement>) => {
-    // Select the text in the input when focused
     e.target.select();
   };
 
-  // Handle key press events
+  const onInputFocusDuration = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select();
+  };
+
   const onKeyPressCurrent = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      onInputBlurCurrent(); // Call onInputBlurCurrent when Enter is pressed
+      onInputBlurCurrent();
+    }
+  };
+
+  const onKeyPressDuration = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onInputBlurDuration();
     }
   };
 
@@ -71,7 +104,7 @@ export const PlayControls: React.FC = () => {
           className="bg-gray-700 px-1 rounded"
           type="number"
           data-testid="current-time-input"
-          min={MIN_TIME}
+          min={MIN_CURRENT}
           max={MAX_TIME}
           step={STEP_TIME}
           value={inputCurrent}
@@ -87,10 +120,14 @@ export const PlayControls: React.FC = () => {
           className="bg-gray-700 px-1 rounded"
           type="number"
           data-testid="duration-input"
-          min={MIN_TIME}
+          min={MIN_DURATION}
           max={MAX_TIME}
           step={STEP_TIME}
-          defaultValue={2000}
+          value={inputDuration}
+          onChange={onInputChangeDuration}
+          onBlur={onInputBlurDuration}
+          onFocus={onInputFocusDuration}
+          onKeyPress={onKeyPressDuration}
         />
         Duration
       </fieldset>
