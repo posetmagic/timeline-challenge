@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setTime, setDuration } from "./State.store";
-import { clampAndRound } from "../utils/utils";
+import { MIN_CURRENT, MIN_DURATION, MAX_TIME, STEP_TIME } from "./State.store";
 
 export const PlayControls: React.FC = () => {
   const dispatch = useDispatch();
@@ -12,33 +12,28 @@ export const PlayControls: React.FC = () => {
   const time_current = useSelector((state: any) => state.time.current);
   const time_duration = useSelector((state: any) => state.time.duration);
 
-  const MIN_CURRENT = 0;
-  const MIN_DURATION = 100;
-  const MAX_TIME = 6000;
-  const STEP_TIME = 10;
-
   // Local state for the input values
-  const [inputCurrent, setinputCurrent] = useState<string>(time_current.toString());
-  const [inputDuration, setinputDuration] = useState<string>(time_duration.toString());
+  const [inputCurrent, setInputCurrent] = useState<string>(time_current.toString());
+  const [inputDuration, setInputDuration] = useState<string>(time_duration.toString());
 
   // Update local inputCurrent state when time_current changes
   useEffect(() => {
-    setinputCurrent(time_current.toString());
+    setInputCurrent(time_current.toString());
   }, [time_current]);
 
   // Update local inputDuration state when time_duration changes
   useEffect(() => {
-    setinputDuration(time_duration.toString());
+    setInputDuration(time_duration.toString());
   }, [time_duration]);
 
   // Handle current time input change
   const onInputChangeCurrent = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setinputCurrent(e.target.value);
+    setInputCurrent(e.target.value);
   };
 
   // Handle duration input change
   const onInputChangeDuration = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setinputDuration(e.target.value);
+    setInputDuration(e.target.value);
   };
 
   const onInputBlurCurrent = useCallback(() => {
@@ -46,36 +41,26 @@ export const PlayControls: React.FC = () => {
 
     if (isNaN(newTimeCurrent)) {
       dispatch(setTime(MIN_CURRENT));
-      setinputCurrent(MIN_CURRENT.toString());
+      setInputCurrent(MIN_CURRENT.toString());
       return;
     }
 
-    const adjustedTimeCurrent = clampAndRound(newTimeCurrent, MIN_CURRENT, Math.min(parseInt(inputDuration, 10) || MAX_TIME, MAX_TIME), STEP_TIME);
-
-    dispatch(setTime(adjustedTimeCurrent));
-    setinputCurrent(adjustedTimeCurrent.toString());
-  }, [dispatch, inputCurrent, inputDuration]);
+    dispatch(setTime(newTimeCurrent));
+    setInputCurrent(newTimeCurrent.toString());
+  }, [dispatch, inputCurrent]);
 
   const onInputBlurDuration = useCallback(() => {
     const newTimeDuration = parseInt(inputDuration, 10);
 
     if (isNaN(newTimeDuration)) {
       dispatch(setDuration(MIN_DURATION));
-      setinputDuration(MIN_DURATION.toString());
+      setInputDuration(MIN_DURATION.toString());
       return;
     }
 
-    const adjustedTimeDuration = clampAndRound(newTimeDuration, MIN_DURATION, MAX_TIME, STEP_TIME);
-
-    // Check if new duration is less than current time
-    if (adjustedTimeDuration < parseInt(inputCurrent, 10)) {
-      dispatch(setTime(adjustedTimeDuration));
-      setinputCurrent(adjustedTimeDuration.toString());
-    }
-
-    dispatch(setDuration(adjustedTimeDuration));
-    setinputDuration(adjustedTimeDuration.toString());
-  }, [dispatch, inputDuration, inputCurrent]);
+    dispatch(setDuration(newTimeDuration));
+    setInputDuration(newTimeDuration.toString());
+  }, [dispatch, inputDuration]);
 
   const onInputFocusCurrent = (e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select();

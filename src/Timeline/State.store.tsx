@@ -2,8 +2,14 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
+import { clampAndRound } from '../utils/utils';
 
-// Define the initial state of the time and scrolls
+// Define constants at the top level
+export const MIN_CURRENT = 0;
+export const MIN_DURATION = 100;
+export const MAX_TIME = 6000;
+export const STEP_TIME = 10;
+
 interface TimeState {
   current: number;
   duration: number;
@@ -14,7 +20,6 @@ interface ScrollState {
   horizontal: number;
 }
 
-// Initial states
 const initialTimeState: TimeState = {
   current: 0,
   duration: 2000,
@@ -31,10 +36,16 @@ const timeSlice = createSlice({
   initialState: initialTimeState,
   reducers: {
     setTime: (state, action: PayloadAction<number>) => {
-      state.current = action.payload;
+      const adjustedTime = clampAndRound(action.payload, MIN_CURRENT, Math.min(state.duration, MAX_TIME), STEP_TIME);
+      state.current = adjustedTime;
     },
     setDuration: (state, action: PayloadAction<number>) => {
-      state.duration = action.payload;
+      const adjustedDuration = clampAndRound(action.payload, MIN_DURATION, MAX_TIME, STEP_TIME);
+      // Check if new duration is less than current time
+      if (adjustedDuration < state.current) {
+        state.current = adjustedDuration;
+      }
+      state.duration = adjustedDuration;
     },
   },
 });
