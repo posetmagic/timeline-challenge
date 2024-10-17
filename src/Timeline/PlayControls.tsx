@@ -1,14 +1,15 @@
 // PlayControls.tsx
 
 import React, { useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setTime } from "./TimeState.store";
 import { clampAndRound } from "../utils/utils";
 
-type PlayControlsProps = {
-  time: number;
-  setTime: (time: number) => void;
-};
+export const PlayControls: React.FC = () => {
+  const dispatch = useDispatch();
 
-export const PlayControls: React.FC<PlayControlsProps> = ({ time, setTime }) => {
+  // Get the current time from the Redux store
+  const time = useSelector((state: any) => state.time.time); // Adjust type according to your store
 
   const MIN_CURRENT = 0;   // Minimum time in seconds
   const MAX_CURRENT = 2000; // Maximum time in seconds
@@ -19,9 +20,10 @@ export const PlayControls: React.FC<PlayControlsProps> = ({ time, setTime }) => 
       const newTime = parseInt(e.target.value, 10); // Parse input as an integer
       // Adjust the time according to the constraints
       const adjustedTime = clampAndRound(newTime, MIN_CURRENT, MAX_CURRENT, STEP_CURRENT);
-      setTime(adjustedTime); // Update the state with the adjusted time
+      // Dispatch the setTime action to update the time in the store
+      dispatch(setTime(adjustedTime));
     },
-    [setTime],
+    [dispatch]
   );
 
   return (

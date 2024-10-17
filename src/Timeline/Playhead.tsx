@@ -1,10 +1,11 @@
-//Playhead.tsx
+// Playhead.tsx
 
-type PlayheadProps = {
-  time: number;
-};
+import { useSelector } from "react-redux";
 
-export const Playhead = ({ time }: PlayheadProps) => {
+export const Playhead = () => {
+  // Use useSelector to get the time from the Redux store
+  const time = useSelector((state: any) => state.time.time); // Adjust type according to your store
+
   return (
     <div
       className="absolute left-[316px] h-full border-l-2 border-solid border-yellow-600 z-10"
