@@ -10,8 +10,8 @@ interface TimeState {
 }
 
 interface ScrollState {
-  vertical: number;  // for vertical scroll
-  horizontal: number; // for horizontal scroll
+  vertical: number;
+  horizontal: number;
 }
 
 // Initial states
@@ -33,7 +33,7 @@ const timeSlice = createSlice({
     setTime: (state, action: PayloadAction<number>) => {
       state.current = action.payload;
     },
-    setDuration: (state, action: PayloadAction<number>) => { // Add this reducer for duration
+    setDuration: (state, action: PayloadAction<number>) => {
       state.duration = action.payload;
     },
   },

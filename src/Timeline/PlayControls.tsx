@@ -50,13 +50,12 @@ export const PlayControls: React.FC = () => {
       return;
     }
 
-    const adjustedTimeCurrent = clampAndRound(newTimeCurrent, MIN_CURRENT, MAX_TIME, STEP_TIME);
+    const adjustedTimeCurrent = clampAndRound(newTimeCurrent, MIN_CURRENT, Math.min(parseInt(inputDuration, 10) || MAX_TIME, MAX_TIME), STEP_TIME);
 
     dispatch(setTime(adjustedTimeCurrent));
     setinputCurrent(adjustedTimeCurrent.toString());
-  }, [dispatch, inputCurrent]);
+  }, [dispatch, inputCurrent, inputDuration]);
 
-  // Similar handler for when duration input loses focus
   const onInputBlurDuration = useCallback(() => {
     const newTimeDuration = parseInt(inputDuration, 10);
 
@@ -66,11 +65,17 @@ export const PlayControls: React.FC = () => {
       return;
     }
 
-    const adjustedTimeDuration = clampAndRound(newTimeDuration, MIN_DURATION, MAX_TIME, STEP_TIME); // Use MIN_DURATION
+    const adjustedTimeDuration = clampAndRound(newTimeDuration, MIN_DURATION, MAX_TIME, STEP_TIME);
 
-    dispatch(setDuration(adjustedTimeDuration)); // Dispatch the setDuration action
-    setinputDuration(adjustedTimeDuration.toString()); // Update inputDuration with the adjusted value
-  }, [dispatch, inputDuration]);
+    // Check if new duration is less than current time
+    if (adjustedTimeDuration < parseInt(inputCurrent, 10)) {
+      dispatch(setTime(adjustedTimeDuration));
+      setinputCurrent(adjustedTimeDuration.toString());
+    }
+
+    dispatch(setDuration(adjustedTimeDuration));
+    setinputDuration(adjustedTimeDuration.toString());
+  }, [dispatch, inputDuration, inputCurrent]);
 
   const onInputFocusCurrent = (e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select();
@@ -105,7 +110,7 @@ export const PlayControls: React.FC = () => {
           type="number"
           data-testid="current-time-input"
           min={MIN_CURRENT}
-          max={MAX_TIME}
+          max={parseInt(inputDuration, 10) || MAX_TIME}
           step={STEP_TIME}
           value={inputCurrent}
           onChange={onInputChangeCurrent}

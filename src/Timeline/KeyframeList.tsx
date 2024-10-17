@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setHorizontalScroll, setVerticalScroll } from './State.store'; // Import setVerticalScroll
+import { setHorizontalScroll, setVerticalScroll } from './State.store';
 import { Segment } from "./Segment";
 
 export const KeyframeList = () => {
@@ -20,14 +20,14 @@ export const KeyframeList = () => {
   useEffect(() => {
     const container = document.getElementById('keyframe-list');
     if (container) {
-      container.scrollTop = verticalScroll; // Synchronize vertical scroll position
+      container.scrollTop = verticalScroll;
     }
   }, [verticalScroll]);
 
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
     const { scrollLeft, scrollTop } = event.currentTarget;
     dispatch(setHorizontalScroll(scrollLeft));
-    dispatch(setVerticalScroll(scrollTop)); // Dispatch the vertical scroll position
+    dispatch(setVerticalScroll(scrollTop));
   };
 
   return (
