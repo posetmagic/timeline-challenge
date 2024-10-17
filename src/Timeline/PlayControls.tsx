@@ -39,7 +39,7 @@ export const PlayControls: React.FC = () => {
   const onInputBlurCurrent = useCallback(() => {
     const newTimeCurrent = parseInt(inputCurrent, 10);
 
-    if (isNaN(newTimeCurrent)) {
+    if (isNaN(newTimeCurrent) || newTimeCurrent < 0) {
       dispatch(setCurrent(MIN_CURRENT));
       setInputCurrent(MIN_CURRENT.toString());
       return;
@@ -52,7 +52,7 @@ export const PlayControls: React.FC = () => {
   const onInputBlurDuration = useCallback(() => {
     const newTimeDuration = parseInt(inputDuration, 10);
 
-    if (isNaN(newTimeDuration)) {
+    if (isNaN(newTimeDuration)|| newTimeDuration < 0) {
       dispatch(setDuration(MIN_DURATION));
       setInputDuration(MIN_DURATION.toString());
       return;
