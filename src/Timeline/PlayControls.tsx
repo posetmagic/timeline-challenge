@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setTime, setDuration } from "./State.store";
+import { setCurrent, setDuration } from "./State.store";
 import { MIN_CURRENT, MIN_DURATION, MAX_TIME, STEP_TIME } from "./State.store";
 
 export const PlayControls: React.FC = () => {
@@ -40,12 +40,12 @@ export const PlayControls: React.FC = () => {
     const newTimeCurrent = parseInt(inputCurrent, 10);
 
     if (isNaN(newTimeCurrent)) {
-      dispatch(setTime(MIN_CURRENT));
+      dispatch(setCurrent(MIN_CURRENT));
       setInputCurrent(MIN_CURRENT.toString());
       return;
     }
 
-    dispatch(setTime(newTimeCurrent));
+    dispatch(setCurrent(newTimeCurrent));
     setInputCurrent(newTimeCurrent.toString());
   }, [dispatch, inputCurrent]);
 

@@ -35,8 +35,8 @@ const timeSlice = createSlice({
   name: 'time',
   initialState: initialTimeState,
   reducers: {
-    setTime: (state, action: PayloadAction<number>) => {
-      const adjustedTime = clampAndRound(action.payload, MIN_CURRENT, Math.min(state.duration, MAX_TIME), STEP_TIME);
+    setCurrent: (state, action: PayloadAction<number>) => {
+      const adjustedTime = clampAndRound(action.payload, MIN_CURRENT, state.duration, STEP_TIME);
       state.current = adjustedTime;
     },
     setDuration: (state, action: PayloadAction<number>) => {
@@ -65,7 +65,7 @@ const scrollSlice = createSlice({
 });
 
 // Export the actions
-export const { setTime, setDuration } = timeSlice.actions;
+export const { setCurrent, setDuration } = timeSlice.actions;
 export const { setVerticalScroll, setHorizontalScroll } = scrollSlice.actions;
 
 // Create and configure the Redux store
