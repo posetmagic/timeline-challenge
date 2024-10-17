@@ -1,3 +1,5 @@
+//Segment.tsx
+
 export const Segment = () => {
   // TODO: resize based on time
 

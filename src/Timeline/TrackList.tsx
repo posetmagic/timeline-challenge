@@ -1,3 +1,5 @@
+//TrackList.tsx
+
 export const TrackList = () => {
   // TODO: implement scroll sync with `KeyframeList`
 

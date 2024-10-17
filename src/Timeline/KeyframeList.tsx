@@ -1,3 +1,5 @@
+//KeyframeList.tsx
+
 import { Segment } from "./Segment";
 export const KeyframeList = () => {
   // TODO: implement scroll sync with `Ruler` and `TrackList`
@@ -17,3 +19,4 @@ export const KeyframeList = () => {
     </div>
   );
 };
+

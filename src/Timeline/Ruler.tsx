@@ -1,3 +1,5 @@
+//Ruler.tsx
+
 export const Ruler = () => {
   // TODO: implement mousedown and mousemove to update time and Playhead position
 

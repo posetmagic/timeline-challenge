@@ -1,3 +1,5 @@
+//Timeline.tsx
+
 import { useState } from "react";
 import { Playhead } from "./Playhead";
 import { Ruler } from "./Ruler";
