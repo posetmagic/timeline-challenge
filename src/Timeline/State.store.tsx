@@ -2,7 +2,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
-import { clampAndRound } from '../utils/utils';
+import { clampAndRound } from '../utils/math';
 
 // Define constants at the top level
 export const MIN_CURRENT = 0;

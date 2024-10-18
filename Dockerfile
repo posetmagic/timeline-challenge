@@ -17,5 +17,8 @@ RUN npm install
 # build page
 RUN npm run build
 
+# expose at compose file
+# EXPOSE 3000
+
 # Start the application
 CMD ["npm", "start"]

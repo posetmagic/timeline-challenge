@@ -1,4 +1,4 @@
-// utils.ts
+// math.ts
 
 /**
  * Utility function to clamp and round the value.
@@ -26,8 +26,11 @@
  */
 export const clampAndRound = (value: number, min: number, max: number, step: number): number => {
 
+    //
+    // removed for performance?
+    //
+    // need close check due to +0, -0 possible get
     // Check if min and max are multiples of step
-    // removed for performance???
     //if (min % step !== 0 || max % step !== 0) {
     //   throw new Error('Both min and max must be multiples of step.');
     //}

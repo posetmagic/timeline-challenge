@@ -1,5 +1,20 @@
 # Phase Timeline Challenge
 
+## PosetMage's work 
+
+#### exec the code
+* env setup: ```npm install```
+* run test: ```npm test```
+* run dev mode: ```npm start```
+* build static: ```npm run build```
+
+#### skip item explanation
+* Invalid inputs (non-numeric)
+  * reason: Bad Design and it allows numbers to convert to strings, causing conflicts since only numeric values should be accepted.
+* Not 100% code coverage testing
+  * reason: Most code are UX behavior. Too much test often overlaps with library its own tests.
+
+
 ## Overview
 
 Implement interactive features for a Timeline component. We will provide a basic Timeline component scaffold, and your task is to implement the functionality that meets the user behavior requirements outlined below.

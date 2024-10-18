@@ -1,6 +1,6 @@
-// src/__tests__/utils.test.js
+// src/__tests__/math.test.tsx
 
-import { clampAndRound } from '../utils/utils';
+import { clampAndRound } from '../utils/math';
 
 describe('clampAndRound Utility Function', () => {
 

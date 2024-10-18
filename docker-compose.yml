@@ -4,7 +4,7 @@ services:
       context: .
     container_name: phase-hw
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:3000"
     environment:
       - NODE_ENV=production
     volumes:
