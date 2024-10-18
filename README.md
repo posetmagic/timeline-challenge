@@ -13,6 +13,10 @@
 * Play Controls cannot type ```-```, fallback to orgin number. (pit of success design)
 * Necessary testing only. Too much test often overlaps with library its own tests.
 
+#### bad UX sign discussion
+* text should not select after keyboard up/down or step button. Because use already get feedback when press that. Further, when the text is select means focus, wait ```Enter``` or blur to update number. However, when press up/down, the number already updated. That is, it don't need ```Enter``` again.
+
+
 ## Overview
 
 Implement interactive features for a Timeline component. We will provide a basic Timeline component scaffold, and your task is to implement the functionality that meets the user behavior requirements outlined below.
@@ -52,8 +56,8 @@ https://github.com/user-attachments/assets/8dd5ef2b-6b57-43dc-91b3-0d322d148781
 - [x] Clicking on the native step buttons immediately changes the value
 - [x] Pressing up arrow or down arrow keys immediately changes the value
 - [x] Entire text is selected when the input field gains focus
-- [ ] Entire text is selected after using the native step buttons
-- [ ] Entire text is selected after using the up arrow or down arrow keys
+- [x] Entire text is selected after using the native step buttons
+- [x] Entire text is selected after using the up arrow or down arrow keys
 - [x] Pressing Enter confirms the new value and removes focus
 - [x] Pressing Escape reverts to the original value and removes focus
 - [x] Leading zeros are automatically removed
