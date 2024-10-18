@@ -38,7 +38,7 @@ https://github.com/user-attachments/assets/8dd5ef2b-6b57-43dc-91b3-0d322d148781
 - [x] Clicking outside the input field removes focus and changes the value
 - [x] Clicking on the native step buttons immediately changes the value
 - [ ] Pressing up arrow or down arrow keys immediately changes the value
-- [ ] Entire text is selected when the input field gains focus
+- [x] Entire text is selected when the input field gains focus
 - [ ] Entire text is selected after using the native step buttons
 - [ ] Entire text is selected after using the up arrow or down arrow keys
 - [x] Pressing Enter confirms the new value and removes focus
@@ -87,9 +87,9 @@ https://github.com/user-attachments/assets/99826161-f821-4e4d-b9a8-b59c16d9894e
 
 https://github.com/user-attachments/assets/3940cd0d-dd9d-4331-9172-592462ad65d3
 
-- [ ] Playhead moves in sync with the Ruler and Keyframe List during horizontal scrolling
-- [ ] Playhead maintains its relative position during horizontal scrolling
-- [ ] Playhead is visible only when within the Timeline's visible area, using the `hidden` attribute when completely out of view
+- [x] Playhead moves in sync with the Ruler and Keyframe List during horizontal scrolling
+- [x] Playhead maintains its relative position during horizontal scrolling
+- [x] Playhead is visible only when within the Timeline's visible area, using the `hidden` attribute when completely out of view
 
 ## Implementation Guidelines
 

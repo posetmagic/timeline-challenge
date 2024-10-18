@@ -53,7 +53,7 @@ export const Ruler = () => {
       const clickPosition = event instanceof MouseEvent
         ? event.clientX - left - 15 // If event is a MouseEvent
         : event.nativeEvent.clientX - left - 15; // Otherwise, extract from native event
-      dispatch(setCurrent(clickPosition)); // Update the current time in Redux
+      dispatch(setCurrent(clickPosition + horizontalScroll)); // Update the current time in Redux
     }
   };
 
@@ -69,21 +69,40 @@ export const Ruler = () => {
     };
   }, [isDragging]); // Add isDragging to dependencies to ensure the effect runs when dragging starts or stops
 
+  // Generate an array of positions for the vertical lines
+  const verticalLines = [];
+  const lineSpacing = 100; // Line every 100px
+  for (let i = 0; i < rulerWidth; i += lineSpacing) {
+    verticalLines.push(i);
+  }
+
   return (
     <div
       id="ruler"
       className="px-4 py-2 min-w-0 
       border-b border-solid border-gray-700 
-      overflow-x-auto overflow-y-hidden"
+      overflow-x-auto overflow-y-hidden relative"
       data-testid="ruler"
       onScroll={handleScroll}
       onMouseDown={handleMouseDown} // Add onMouseDown to initiate dragging
     >
       <div
-        className="h-6 rounded-md bg-white/25"
+        className="h-6 rounded-md bg-white/25 relative"
         style={{ width: `${rulerWidth}px` }}
         data-testid="ruler-bar"
-      ></div>
+      >
+        {/* Render vertical lines */}
+        {verticalLines.map((position) => (
+          <div
+            key={position}
+            className="absolute bg-white h-full"
+            style={{
+              width: '1px', // Thin vertical line
+              left: `${position}px`,
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 };
