@@ -73,12 +73,14 @@ export const PlayControls: React.FC = () => {
   const onKeyPressCurrent = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onInputBlurCurrent();
+      e.currentTarget.blur();
     }
   };
-
+  
   const onKeyPressDuration = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onInputBlurDuration();
+      e.currentTarget.blur();
     }
   };
 
