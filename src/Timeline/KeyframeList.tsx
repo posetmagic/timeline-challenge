@@ -30,6 +30,11 @@ export const KeyframeList = () => {
     dispatch(setVerticalScroll(scrollTop));
   };
 
+  //
+  // better design: should not set to 10 but follow the number of Track List Number
+  // skip due to not in homework item
+  //
+
   return (
     <div
       id="keyframe-list"
