@@ -76,6 +76,14 @@ export const PlayControls: React.FC = () => {
       const increment = e.key === 'ArrowUp' ? STEP_TIME : -STEP_TIME;
       const currentValue = type === 'current' ? fieldCurrent : fieldDuration;
       UpdateRedux(type, currentValue + increment);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      e.preventDefault(); // Prevent default action for Left and Right Arrow keys
+    } else if  ((e.key === 'Escape') || (typeof e.key === 'string' && isNaN(Number(e.key)))) {
+      if (type === 'current') {
+        setFieldCurrent(time_current);
+      } else {
+        setFieldDuration(time_duration);
+      }
     }
   };
 

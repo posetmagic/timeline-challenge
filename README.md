@@ -11,7 +11,7 @@
 #### additional UI/UX improvement
 * Ruler add line for each 100px.
 * Play Controls cannot type ```-```, fallback to orgin number. (pit of success design)
-* necessary testing only. Too much test often overlaps with library its own tests.
+* Necessary testing only. Too much test often overlaps with library its own tests.
 
 ## Overview
 
@@ -55,11 +55,11 @@ https://github.com/user-attachments/assets/8dd5ef2b-6b57-43dc-91b3-0d322d148781
 - [ ] Entire text is selected after using the native step buttons
 - [ ] Entire text is selected after using the up arrow or down arrow keys
 - [x] Pressing Enter confirms the new value and removes focus
-- [ ] Pressing Escape reverts to the original value and removes focus
+- [x] Pressing Escape reverts to the original value and removes focus
 - [x] Leading zeros are automatically removed
 - [x] Negative values are automatically adjusted to the minimum allowed value
 - [x] Decimal values are automatically rounded to the nearest integer
-- [ ] Invalid inputs (non-numeric) revert to the previous valid value
+- [x] Invalid inputs (non-numeric) revert to the previous valid value
 
 ### 2. Play Controls Behavior
 
