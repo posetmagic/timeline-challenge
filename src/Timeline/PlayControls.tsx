@@ -12,7 +12,7 @@ export const PlayControls: React.FC = () => {
   const time_current = useSelector((state: any) => state.time.current);
   const time_duration = useSelector((state: any) => state.time.duration);
 
-  // Local state for the input values (using number type directly)
+  // Local state for the input values
   const [inputCurrent, setInputCurrent] = useState<number>(time_current);
   const [inputDuration, setInputDuration] = useState<number>(time_duration);
 
@@ -29,13 +29,13 @@ export const PlayControls: React.FC = () => {
   // Handle current time input change
   const onInputChangeCurrent = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);
-    setInputCurrent(isNaN(value) ? time_current : value); // Revert to time_current if NaN
+    setInputCurrent(isNaN(value) ? time_current : value);
   };
 
   // Handle duration input change
   const onInputChangeDuration = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);
-    setInputDuration(isNaN(value) ? time_duration : value); // Revert to time_duration if NaN
+    setInputDuration(isNaN(value) ? time_duration : value);
   };
 
   const onInputBlurCurrent = useCallback(() => {
@@ -66,17 +66,49 @@ export const PlayControls: React.FC = () => {
     e.target.select();
   };
 
-  const onKeyPressCurrent = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const onKeyDownCurrent = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onInputBlurCurrent();
       e.currentTarget.blur();
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      handleArrowKeyPress(e, 'current');
     }
   };
 
-  const onKeyPressDuration = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const onKeyDownDuration = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onInputBlurDuration();
       e.currentTarget.blur();
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      handleArrowKeyPress(e, 'duration');
+    }
+  };
+
+  const handleArrowKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, type: 'current' | 'duration') => {
+    e.preventDefault();
+    
+    const isUp = e.key === 'ArrowUp';
+    
+    // Adjust the current time or duration based on the arrow key pressed
+    if (type === 'current') {
+      const newCurrent = isUp ? time_current + STEP_TIME : time_current - STEP_TIME;
+      if (newCurrent <= time_duration){
+        setInputCurrent(newCurrent);
+        dispatch(setCurrent(newCurrent));
+      }
+    } else if (type === 'duration') {
+      const newDuration = isUp ? time_duration + STEP_TIME : time_duration - STEP_TIME;
+      setInputDuration(newDuration);
+      dispatch(setDuration(newDuration));
+    }
+
+    // Keep the input focused and selected
+    if (type === 'current') {
+      (document.querySelector("[data-testid='current-time-input']") as HTMLInputElement)?.focus();
+      (document.querySelector("[data-testid='current-time-input']") as HTMLInputElement)?.select();
+    } else {
+      (document.querySelector("[data-testid='duration-input']") as HTMLInputElement)?.focus();
+      (document.querySelector("[data-testid='duration-input']") as HTMLInputElement)?.select();
     }
   };
 
@@ -93,13 +125,13 @@ export const PlayControls: React.FC = () => {
           type="number"
           data-testid="current-time-input"
           min={MIN_CURRENT}
-          max={inputDuration || MAX_TIME} // Use inputDuration directly as a number
+          max={inputDuration || MAX_TIME}
           step={STEP_TIME}
           value={inputCurrent}
           onChange={onInputChangeCurrent}
           onBlur={onInputBlurCurrent}
           onFocus={onInputFocusCurrent}
-          onKeyPress={onKeyPressCurrent}
+          onKeyDown={onKeyDownCurrent}
         />
       </fieldset>
       -
@@ -115,7 +147,7 @@ export const PlayControls: React.FC = () => {
           onChange={onInputChangeDuration}
           onBlur={onInputBlurDuration}
           onFocus={onInputFocusDuration}
-          onKeyPress={onKeyPressDuration}
+          onKeyDown={onKeyDownDuration}
         />
         Duration
       </fieldset>

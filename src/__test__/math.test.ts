@@ -1,4 +1,4 @@
-// src/__tests__/math.test.tsx
+// src/__tests__/math.test.ts
 
 import { clampAndRound } from '../utils/math';
 
