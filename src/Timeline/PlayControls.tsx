@@ -1,6 +1,6 @@
 // PlayControls.tsx
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrent, setDuration } from "./State.store";
 import { MIN_CURRENT, MIN_DURATION, MAX_TIME, STEP_TIME } from "./State.store";
@@ -15,6 +15,10 @@ export const PlayControls: React.FC = () => {
   // Local state for the input values
   const [fieldCurrent, setFieldCurrent] = useState<number>(time_current);
   const [fieldDuration, setFieldDuration] = useState<number>(time_duration);
+
+  // References for input fields to allow text selection
+  const currentInputRef = useRef<HTMLInputElement>(null);
+  const durationInputRef = useRef<HTMLInputElement>(null);
 
   // Init input numbers to origin 
   useEffect(() => {
@@ -41,7 +45,7 @@ export const PlayControls: React.FC = () => {
     } else if (type === 'duration') {
         dispatch(setDuration(newValue));
     }
-  }, [dispatch, time_duration]);
+  }, [dispatch]);
 
   // on Blur
   const LeaveFocus = (type: 'current' | 'duration') => {
@@ -52,7 +56,6 @@ export const PlayControls: React.FC = () => {
       } else {
         UpdateRedux('current', fieldCurrent);
       }
-        
     } else if (type === 'duration') {
       if (fieldDuration < 0) {
         dispatch(setDuration(MIN_DURATION));
@@ -75,10 +78,18 @@ export const PlayControls: React.FC = () => {
       e.preventDefault();
       const increment = e.key === 'ArrowUp' ? STEP_TIME : -STEP_TIME;
       const currentValue = type === 'current' ? fieldCurrent : fieldDuration;
+
       UpdateRedux(type, currentValue + increment);
+
+      // Select the text in the input after updating
+      if (type === 'current' && currentInputRef.current) {
+        currentInputRef.current.select();
+      } else if (type === 'duration' && durationInputRef.current) {
+        durationInputRef.current.select();
+      }
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       e.preventDefault(); // Prevent default action for Left and Right Arrow keys
-    } else if  ((e.key === 'Escape') || (typeof e.key === 'string' && isNaN(Number(e.key)))) {
+    } else if ((e.key === 'Escape') || (typeof e.key === 'string' && isNaN(Number(e.key)))) {
       if (type === 'current') {
         setFieldCurrent(time_current);
       } else {
@@ -95,8 +106,16 @@ export const PlayControls: React.FC = () => {
       // Check if the value has changed due to button click
       if (type === 'current' && value !== fieldCurrent) {
         UpdateRedux('current', value);
+        // Select the text in the input after updating
+        if (currentInputRef.current) {
+          currentInputRef.current.select();
+        }
       } else if (type === 'duration' && value !== fieldDuration) {
         UpdateRedux('duration', value);
+        // Select the text in the input after updating
+        if (durationInputRef.current) {
+          durationInputRef.current.select();
+        }
       }
     }
   };
@@ -109,6 +128,7 @@ export const PlayControls: React.FC = () => {
       <fieldset className="flex gap-1">
         Current
         <input
+          ref={currentInputRef}
           className="bg-gray-700 px-1 rounded"
           type="number"
           data-testid="current-time-input"
@@ -126,6 +146,7 @@ export const PlayControls: React.FC = () => {
       -
       <fieldset className="flex gap-1">
         <input
+          ref={durationInputRef}
           className="bg-gray-700 px-1 rounded"
           type="number"
           data-testid="duration-input"

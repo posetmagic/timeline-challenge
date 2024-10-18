@@ -11,7 +11,7 @@ export const Playhead = () => {
   const transformValue = time - horizontal;
 
   // Determine if the Playhead should be hidden
-  const isHidden = transformValue < 0;
+  const isHidden = transformValue < -15;
 
   return (
     <div
