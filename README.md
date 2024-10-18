@@ -14,6 +14,8 @@
 * Not 100% code coverage testing
   * reason: Most code are UX behavior. Too much test often overlaps with library its own tests.
 
+#### additional UI/UX improvement
+* Ruler add line for each 100px.
 
 ## Overview
 
