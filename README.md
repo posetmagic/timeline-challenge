@@ -9,12 +9,29 @@
 * build static: ```npm run build```
 
 #### additional UI/UX improvement
-* Ruler add line for each 100px.
-* Play Controls cannot type ```-```, fallback to orgin number. (pit of success design)
-* Necessary testing only. Too much test often overlaps with library its own tests.
+* Ruler add line for each 100px
+* Play Controls cannot type ```-```, fallback to number only. (pit of success design)
+* Necessary testing only. (Too much test often overlaps with library its own tests)
 
 #### bad UX sign discussion
-* text should not select after keyboard up/down or step button. Because use already get feedback when press that. Further, when the text is select means focus, wait ```Enter``` or blur to update number. However, when press up/down, the number already updated. That is, it don't need ```Enter``` again.
+* text should not be selected after keyboard up/down or step button. Because user already get feedback when press that. Further, when the text is selected, that is, means focus and wait ```Enter``` or blur to update number. However, when press up/down, the number already updated. It don't need ```Enter``` again. This is a conflict logic design.
+
+#### GPT help dev
+* all developing process using chatgpt free plan and 10 times Claude free plan
+* [chat history](./GPT/)
+
+#### Problem solving steps
+1. Check dev env
+  * lang: react-ts
+  * test: react-scripts test --env=jsdom
+  * run on docker
+2. Check design requierments
+3. Thinking a better path of implementing and performance
+  * use redux for lazy update
+  * sync scrolling need global var
+  * sync time need global var
+  * test case for core algo such math
+4. Prioritize minimizing modifications to the original code, keeping it as intact as possible.
 
 
 ## Overview

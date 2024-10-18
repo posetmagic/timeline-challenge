@@ -31,7 +31,7 @@ export const KeyframeList = () => {
   };
 
   //
-  // better design: should not set to 10 but follow the number of Track List Number
+  // future better design: should not set to 10 but follow the number of Track List Number
   // skip due to not in homework item
   //
 

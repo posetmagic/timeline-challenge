@@ -27,13 +27,13 @@
 export const clampAndRound = (value: number, min: number, max: number, step: number): number => {
 
     //
-    // removed for performance?
+    // removed for performance
     //
-    // need close check due to +0, -0 possible get
-    // Check if min and max are multiples of step
-    //if (min % step !== 0 || max % step !== 0) {
+
+    // Check if min and max are multiples of step, need handle +-0 case
+    // if ((min % step !== 0 && !Object.is(min, 0)) || (max % step !== 0 && !Object.is(max, 0))) {
     //   throw new Error('Both min and max must be multiples of step.');
-    //}
+    // }
 
     const clampedValue = Math.max(min, Math.min(max, value));
     const roundedValue = Math.round(clampedValue / step) * step;
