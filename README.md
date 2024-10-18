@@ -8,14 +8,10 @@
 * run dev mode: ```npm start```
 * build static: ```npm run build```
 
-#### skip item explanation
-* Invalid inputs (non-numeric)
-  * reason: Bad Design and it allows numbers to convert to strings, causing conflicts since only numeric values should be accepted.
-* Not 100% code coverage testing
-  * reason: Most code are UX behavior. Too much test often overlaps with library its own tests.
-
 #### additional UI/UX improvement
 * Ruler add line for each 100px.
+* Play Controls cannot type ```-```, fallback to orgin number. (pit of success design)
+* necessary testing only. Too much test often overlaps with library its own tests.
 
 ## Overview
 
@@ -63,7 +59,7 @@ https://github.com/user-attachments/assets/8dd5ef2b-6b57-43dc-91b3-0d322d148781
 - [x] Leading zeros are automatically removed
 - [x] Negative values are automatically adjusted to the minimum allowed value
 - [x] Decimal values are automatically rounded to the nearest integer
-- [ ] Invalid inputs (non-numeric) revert to the previous valid value
+- [x] Invalid inputs (non-numeric) revert to the previous valid value
 
 ### 2. Play Controls Behavior
 

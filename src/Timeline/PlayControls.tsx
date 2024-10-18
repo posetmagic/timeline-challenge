@@ -12,54 +12,50 @@ export const PlayControls: React.FC = () => {
   const time_current = useSelector((state: any) => state.time.current);
   const time_duration = useSelector((state: any) => state.time.duration);
 
-  // Local state for the input values
-  const [inputCurrent, setInputCurrent] = useState<string>(time_current.toString());
-  const [inputDuration, setInputDuration] = useState<string>(time_duration.toString());
+  // Local state for the input values (using number type directly)
+  const [inputCurrent, setInputCurrent] = useState<number>(time_current);
+  const [inputDuration, setInputDuration] = useState<number>(time_duration);
 
   // Update local inputCurrent state when time_current changes
   useEffect(() => {
-    setInputCurrent(time_current.toString());
+    setInputCurrent(time_current);
   }, [time_current]);
 
   // Update local inputDuration state when time_duration changes
   useEffect(() => {
-    setInputDuration(time_duration.toString());
+    setInputDuration(time_duration);
   }, [time_duration]);
 
   // Handle current time input change
   const onInputChangeCurrent = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputCurrent(e.target.value);
+    const value = parseInt(e.target.value, 10);
+    setInputCurrent(isNaN(value) ? time_current : value); // Revert to time_current if NaN
   };
 
   // Handle duration input change
   const onInputChangeDuration = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputDuration(e.target.value);
+    const value = parseInt(e.target.value, 10);
+    setInputDuration(isNaN(value) ? time_duration : value); // Revert to time_duration if NaN
   };
 
   const onInputBlurCurrent = useCallback(() => {
-    const newTimeCurrent = parseInt(inputCurrent, 10);
-
-    if (isNaN(newTimeCurrent) || newTimeCurrent < 0) {
+    if (inputCurrent < 0) {
       dispatch(setCurrent(MIN_CURRENT));
-      setInputCurrent(MIN_CURRENT.toString());
+      setInputCurrent(MIN_CURRENT);
       return;
     }
 
-    dispatch(setCurrent(newTimeCurrent));
-    setInputCurrent(newTimeCurrent.toString());
+    dispatch(setCurrent(inputCurrent));
   }, [dispatch, inputCurrent]);
 
   const onInputBlurDuration = useCallback(() => {
-    const newTimeDuration = parseInt(inputDuration, 10);
-
-    if (isNaN(newTimeDuration)|| newTimeDuration < 0) {
+    if (inputDuration < 0) {
       dispatch(setDuration(MIN_DURATION));
-      setInputDuration(MIN_DURATION.toString());
+      setInputDuration(MIN_DURATION);
       return;
     }
 
-    dispatch(setDuration(newTimeDuration));
-    setInputDuration(newTimeDuration.toString());
+    dispatch(setDuration(inputDuration));
   }, [dispatch, inputDuration]);
 
   const onInputFocusCurrent = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -76,7 +72,7 @@ export const PlayControls: React.FC = () => {
       e.currentTarget.blur();
     }
   };
-  
+
   const onKeyPressDuration = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onInputBlurDuration();
@@ -97,7 +93,7 @@ export const PlayControls: React.FC = () => {
           type="number"
           data-testid="current-time-input"
           min={MIN_CURRENT}
-          max={parseInt(inputDuration, 10) || MAX_TIME}
+          max={inputDuration || MAX_TIME} // Use inputDuration directly as a number
           step={STEP_TIME}
           value={inputCurrent}
           onChange={onInputChangeCurrent}
