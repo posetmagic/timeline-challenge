@@ -24,6 +24,7 @@ export const PlayControls: React.FC = () => {
   useEffect(() => {
     setFieldCurrent(time_current);
   }, [time_current]);
+
   useEffect(() => {
     setFieldDuration(time_duration);
   }, [time_duration]);
@@ -32,18 +33,18 @@ export const PlayControls: React.FC = () => {
   const TypingNumber = (e: React.ChangeEvent<HTMLInputElement>, type: 'current' | 'duration') => {
     const value = parseInt(e.target.value, 10);
     if (type === 'current') {
-        setFieldCurrent(isNaN(value) ? time_current : value);
+      setFieldCurrent(isNaN(value) ? time_current : value);
     } else {
-        setFieldDuration(isNaN(value) ? time_duration : value);
+      setFieldDuration(isNaN(value) ? time_duration : value);
     }
   };
 
   // Real Update to redux
   const UpdateRedux = useCallback((type: 'current' | 'duration', newValue: number) => {
     if (type === 'current') {
-        dispatch(setCurrent(newValue));
+      dispatch(setCurrent(newValue));
     } else if (type === 'duration') {
-        dispatch(setDuration(newValue));
+      dispatch(setDuration(newValue));
     }
   }, [dispatch]);
 
@@ -78,18 +79,29 @@ export const PlayControls: React.FC = () => {
       e.preventDefault();
       const increment = e.key === 'ArrowUp' ? STEP_TIME : -STEP_TIME;
       const currentValue = type === 'current' ? fieldCurrent : fieldDuration;
+      const newValue = currentValue + increment;
 
-      UpdateRedux(type, currentValue + increment);
+      UpdateRedux(type, newValue);
 
-      // Select the text in the input after updating
-      if (type === 'current' && currentInputRef.current) {
-        currentInputRef.current.select();
-      } else if (type === 'duration' && durationInputRef.current) {
-        durationInputRef.current.select();
+      // Update local state to trigger re-render
+      if (type === 'current') {
+        setFieldCurrent(newValue);
+      } else {
+        setFieldDuration(newValue);
       }
+
+      // Use setTimeout to maintain selection after state update
+      setTimeout(() => {
+        // Select the text in the input after updating
+        if (type === 'current' && currentInputRef.current) {
+          currentInputRef.current.select();
+        } else if (type === 'duration' && durationInputRef.current) {
+          durationInputRef.current.select();
+        }
+      }, 0);
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-      e.preventDefault(); // Prevent default action for Left and Right Arrow keys
-    } else if ((e.key === 'Escape') || (typeof e.key === 'string' && isNaN(Number(e.key)))) {
+      e.preventDefault();
+    } else if ((e.key === 'Escape') || (typeof e.key === 'string' && isNaN(Number(e.key)) && e.key.length === 1)) {
       if (type === 'current') {
         setFieldCurrent(time_current);
       } else {
@@ -103,19 +115,16 @@ export const PlayControls: React.FC = () => {
     const value = parseInt(input.value, 10);
     
     if (!isNaN(value) && input.validity.valid) {
-      // Check if the value has changed due to button click
       if (type === 'current' && value !== fieldCurrent) {
         UpdateRedux('current', value);
         // Select the text in the input after updating
-        if (currentInputRef.current) {
-          currentInputRef.current.select();
-        }
+        setFieldCurrent(value);
+        setTimeout(() => currentInputRef.current?.select(), 0);
       } else if (type === 'duration' && value !== fieldDuration) {
         UpdateRedux('duration', value);
         // Select the text in the input after updating
-        if (durationInputRef.current) {
-          durationInputRef.current.select();
-        }
+        setFieldDuration(value);
+        setTimeout(() => durationInputRef.current?.select(), 0);
       }
     }
   };
