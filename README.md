@@ -50,7 +50,7 @@ https://github.com/user-attachments/assets/8dd5ef2b-6b57-43dc-91b3-0d322d148781
 - [x] The displayed value updates immediately while typing, but `onChange` is not triggered until input is confirmed
 - [x] Clicking outside the input field removes focus and changes the value
 - [x] Clicking on the native step buttons immediately changes the value
-- [ ] Pressing up arrow or down arrow keys immediately changes the value
+- [x] Pressing up arrow or down arrow keys immediately changes the value
 - [x] Entire text is selected when the input field gains focus
 - [ ] Entire text is selected after using the native step buttons
 - [ ] Entire text is selected after using the up arrow or down arrow keys
@@ -59,7 +59,7 @@ https://github.com/user-attachments/assets/8dd5ef2b-6b57-43dc-91b3-0d322d148781
 - [x] Leading zeros are automatically removed
 - [x] Negative values are automatically adjusted to the minimum allowed value
 - [x] Decimal values are automatically rounded to the nearest integer
-- [x] Invalid inputs (non-numeric) revert to the previous valid value
+- [ ] Invalid inputs (non-numeric) revert to the previous valid value
 
 ### 2. Play Controls Behavior
 

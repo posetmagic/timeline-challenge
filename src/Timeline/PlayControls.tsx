@@ -13,109 +13,89 @@ export const PlayControls: React.FC = () => {
   const time_duration = useSelector((state: any) => state.time.duration);
 
   // Local state for the input values
-  const [inputCurrent, setInputCurrent] = useState<number>(time_current);
-  const [inputDuration, setInputDuration] = useState<number>(time_duration);
+  const [fieldCurrent, setFieldCurrent] = useState<number>(time_current);
+  const [fieldDuration, setFieldDuration] = useState<number>(time_duration);
 
-  // Update local inputCurrent state when time_current changes
+  // Init input numbers to origin 
   useEffect(() => {
-    setInputCurrent(time_current);
+    setFieldCurrent(time_current);
   }, [time_current]);
-
-  // Update local inputDuration state when time_duration changes
   useEffect(() => {
-    setInputDuration(time_duration);
+    setFieldDuration(time_duration);
   }, [time_duration]);
 
-  // Handle current time input change
-  const onInputChangeCurrent = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // fieldset update
+  const TypingNumber = (e: React.ChangeEvent<HTMLInputElement>, type: 'current' | 'duration') => {
     const value = parseInt(e.target.value, 10);
-    setInputCurrent(isNaN(value) ? time_current : value);
-  };
-
-  // Handle duration input change
-  const onInputChangeDuration = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10);
-    setInputDuration(isNaN(value) ? time_duration : value);
-  };
-
-  const onInputBlurCurrent = useCallback(() => {
-    if (inputCurrent < 0) {
-      dispatch(setCurrent(MIN_CURRENT));
-      setInputCurrent(MIN_CURRENT);
-      return;
-    }
-
-    dispatch(setCurrent(inputCurrent));
-  }, [dispatch, inputCurrent]);
-
-  const onInputBlurDuration = useCallback(() => {
-    if (inputDuration < 0) {
-      dispatch(setDuration(MIN_DURATION));
-      setInputDuration(MIN_DURATION);
-      return;
-    }
-
-    dispatch(setDuration(inputDuration));
-  }, [dispatch, inputDuration]);
-
-  const onInputFocusCurrent = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.select();
-  };
-
-  const onInputFocusDuration = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.select();
-  };
-
-  const onKeyDownCurrent = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onInputBlurCurrent();
-      e.currentTarget.blur();
-    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-      handleArrowKeyPress(e, 'current');
-    }
-  };
-
-  const onKeyDownDuration = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onInputBlurDuration();
-      e.currentTarget.blur();
-    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-      handleArrowKeyPress(e, 'duration');
-    }
-  };
-
-  const handleArrowKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, type: 'current' | 'duration') => {
-    e.preventDefault();
-    
-    const isUp = e.key === 'ArrowUp';
-    
-    // Adjust the current time or duration based on the arrow key pressed
     if (type === 'current') {
-      const newCurrent = isUp ? time_current + STEP_TIME : time_current - STEP_TIME;
-      if (newCurrent <= time_duration){
-        setInputCurrent(newCurrent);
-        dispatch(setCurrent(newCurrent));
-      }
-    } else if (type === 'duration') {
-      const newDuration = isUp ? time_duration + STEP_TIME : time_duration - STEP_TIME;
-      setInputDuration(newDuration);
-      dispatch(setDuration(newDuration));
-    }
-
-    // Keep the input focused and selected
-    if (type === 'current') {
-      (document.querySelector("[data-testid='current-time-input']") as HTMLInputElement)?.focus();
-      (document.querySelector("[data-testid='current-time-input']") as HTMLInputElement)?.select();
+        setFieldCurrent(isNaN(value) ? time_current : value);
     } else {
-      (document.querySelector("[data-testid='duration-input']") as HTMLInputElement)?.focus();
-      (document.querySelector("[data-testid='duration-input']") as HTMLInputElement)?.select();
+        setFieldDuration(isNaN(value) ? time_duration : value);
+    }
+  };
+
+  // Real Update to redux
+  const UpdateRedux = useCallback((type: 'current' | 'duration', newValue: number) => {
+    if (type === 'current') {
+        dispatch(setCurrent(newValue));
+    } else if (type === 'duration') {
+        dispatch(setDuration(newValue));
+    }
+  }, [dispatch, time_duration]);
+
+  // on Blur
+  const LeaveFocus = (type: 'current' | 'duration') => {
+    if (type === 'current') {
+      if (fieldCurrent < 0) {
+        dispatch(setCurrent(MIN_CURRENT));
+        setFieldCurrent(MIN_CURRENT);
+      } else {
+        UpdateRedux('current', fieldCurrent);
+      }
+        
+    } else if (type === 'duration') {
+      if (fieldDuration < 0) {
+        dispatch(setDuration(MIN_DURATION));
+        setFieldDuration(MIN_DURATION);
+      } else {
+        UpdateRedux('duration', fieldDuration);
+      }
+    }
+  };
+
+  const onInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, type: 'current' | 'duration') => {
+    if (e.key === 'Enter') {
+      LeaveFocus(type);
+      e.currentTarget.blur();
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const increment = e.key === 'ArrowUp' ? STEP_TIME : -STEP_TIME;
+      const currentValue = type === 'current' ? fieldCurrent : fieldDuration;
+      UpdateRedux(type, currentValue + increment);
+    }
+  };
+
+  const handleInput = (e: React.FormEvent<HTMLInputElement>, type: 'current' | 'duration') => {
+    const input = e.target as HTMLInputElement;
+    const value = parseInt(input.value, 10);
+    
+    if (!isNaN(value) && input.validity.valid) {
+      // Check if the value has changed due to button click
+      if (type === 'current' && value !== fieldCurrent) {
+        UpdateRedux('current', value);
+      } else if (type === 'duration' && value !== fieldDuration) {
+        UpdateRedux('duration', value);
+      }
     }
   };
 
   return (
     <div
-      className="flex items-center justify-between border-b border-r border-solid border-gray-700 
-    px-2"
+      className="flex items-center justify-between border-b border-r border-solid border-gray-700 px-2"
       data-testid="play-controls"
     >
       <fieldset className="flex gap-1">
@@ -125,13 +105,14 @@ export const PlayControls: React.FC = () => {
           type="number"
           data-testid="current-time-input"
           min={MIN_CURRENT}
-          max={inputDuration || MAX_TIME}
+          max={fieldDuration || MAX_TIME}
           step={STEP_TIME}
-          value={inputCurrent}
-          onChange={onInputChangeCurrent}
-          onBlur={onInputBlurCurrent}
-          onFocus={onInputFocusCurrent}
-          onKeyDown={onKeyDownCurrent}
+          value={fieldCurrent}
+          onChange={(e) => TypingNumber(e, 'current')}
+          onBlur={() => LeaveFocus('current')}
+          onFocus={onInputFocus}
+          onKeyDown={(e) => handleKeyDown(e, 'current')}
+          onInput={(e) => handleInput(e, 'current')}
         />
       </fieldset>
       -
@@ -143,11 +124,12 @@ export const PlayControls: React.FC = () => {
           min={MIN_DURATION}
           max={MAX_TIME}
           step={STEP_TIME}
-          value={inputDuration}
-          onChange={onInputChangeDuration}
-          onBlur={onInputBlurDuration}
-          onFocus={onInputFocusDuration}
-          onKeyDown={onKeyDownDuration}
+          value={fieldDuration}
+          onChange={(e) => TypingNumber(e, 'duration')}
+          onBlur={() => LeaveFocus('duration')}
+          onFocus={onInputFocus}
+          onKeyDown={(e) => handleKeyDown(e, 'duration')}
+          onInput={(e) => handleInput(e, 'duration')}
         />
         Duration
       </fieldset>
