@@ -11,28 +11,26 @@
 #### additional UI/UX improvement
 * Ruler add line for each 100px
 * Play Controls cannot type ```-```, fallback to number only. (pit of success design)
-* Necessary testing only. (Too much test often overlaps with library its own tests)
+* (Spec Change)
+    * the works code is in comment lines with //Spec Change
+    * text should not select after keyboard up/down or step button. Because use already get feedback when press that. Further, when the text is select means focus, wait ```Enter``` or blur to update number. However, when press up/down, the number already updated. That is, it don't need ```Enter``` again. This is a conflict design.
 
-#### bad UX sign discussion
-* text should not be selected after keyboard up/down or step button. Because user already get feedback when press that. Further, when the text is selected, that is, means focus and wait ```Enter``` or blur to update number. However, when press up/down, the number already updated. It don't need ```Enter``` again. This is a conflict logic design.
-
-#### GPT help dev
-* all developing process using chatgpt free plan and 10 times Claude free plan
-* [chat history](./GPT/)
 
 #### Problem solving steps
 1. Check dev env
-  * lang: react-ts
-  * test: react-scripts test --env=jsdom
-  * run on docker
+    * lang: react-ts
+    * test: react-scripts test --env=jsdom
+    * run on docker
 2. Check design requierments
-3. Thinking a better path of implementing and performance
-  * use redux for lazy update
-  * sync scrolling need global var
-  * sync time need global var
-  * test case for core algo such math
-4. Prioritize minimizing modifications to the original code, keeping it as intact as possible.
-
+3. Thinking better UI/UX design
+    * (Spec Change)
+4. Thinking a better path of implementing and performance
+    * use redux for lazy update
+    * sync scrolling and time use global var
+    * test case for core algo such math
+    * refractor
+5. Prioritize minimizing modifications to the original code, keeping it as intact as possible.
+6. Coding with GPT, see [chat history](./GPT/)
 
 ## Overview
 
@@ -73,8 +71,8 @@ https://github.com/user-attachments/assets/8dd5ef2b-6b57-43dc-91b3-0d322d148781
 - [x] Clicking on the native step buttons immediately changes the value
 - [x] Pressing up arrow or down arrow keys immediately changes the value
 - [x] Entire text is selected when the input field gains focus
-- [x] Entire text is selected after using the native step buttons
-- [x] Entire text is selected after using the up arrow or down arrow keys
+- [x] (see (Spec Change))Entire text is selected after using the native step buttons
+- [x] (see (Spec Change))Entire text is selected after using the up arrow or down arrow keys
 - [x] Pressing Enter confirms the new value and removes focus
 - [x] Pressing Escape reverts to the original value and removes focus
 - [x] Leading zeros are automatically removed

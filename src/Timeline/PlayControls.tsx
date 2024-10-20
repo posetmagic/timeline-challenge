@@ -1,6 +1,6 @@
 // PlayControls.tsx
 
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrent, setDuration } from "./State.store";
 import { MIN_CURRENT, MIN_DURATION, MAX_TIME, STEP_TIME } from "./State.store";
@@ -16,61 +16,47 @@ export const PlayControls: React.FC = () => {
   const [fieldCurrent, setFieldCurrent] = useState<number>(time_current);
   const [fieldDuration, setFieldDuration] = useState<number>(time_duration);
 
-  // References for input fields to allow text selection
-  const currentInputRef = useRef<HTMLInputElement>(null);
-  const durationInputRef = useRef<HTMLInputElement>(null);
-
   // Init input numbers to origin 
   useEffect(() => {
     setFieldCurrent(time_current);
-  }, [time_current]);
-
-  useEffect(() => {
     setFieldDuration(time_duration);
-  }, [time_duration]);
+  }, [time_current, time_duration]);
 
-  // fieldset update
-  const TypingNumber = (e: React.ChangeEvent<HTMLInputElement>, type: 'current' | 'duration') => {
-    const value = parseInt(e.target.value, 10);
-    if (type === 'current') {
-      setFieldCurrent(isNaN(value) ? time_current : value);
-    } else {
-      setFieldDuration(isNaN(value) ? time_duration : value);
-    }
+  // Utility functions to get and set field values
+  const getField = (type: 'current' | 'duration') => {
+    return type === 'current' ? fieldCurrent : fieldDuration;
+  };
+
+  const setField = (type: 'current' | 'duration', value: number) => {
+    type === 'current' ? setFieldCurrent(value) : setFieldDuration(value);
   };
 
   // Real Update to redux
   const UpdateRedux = useCallback((type: 'current' | 'duration', newValue: number) => {
     if (type === 'current') {
       dispatch(setCurrent(newValue));
-    } else if (type === 'duration') {
+    } else { // type === 'duration'
       dispatch(setDuration(newValue));
     }
   }, [dispatch]);
 
-  // on Blur
-  const LeaveFocus = (type: 'current' | 'duration') => {
-    if (type === 'current') {
-      if (fieldCurrent < 0) {
-        dispatch(setCurrent(MIN_CURRENT));
-        setFieldCurrent(MIN_CURRENT);
-      } else {
-        UpdateRedux('current', fieldCurrent);
-      }
-    } else if (type === 'duration') {
-      if (fieldDuration < 0) {
-        dispatch(setDuration(MIN_DURATION));
-        setFieldDuration(MIN_DURATION);
-      } else {
-        UpdateRedux('duration', fieldDuration);
-      }
-    }
+  // Update local state on typing but don't update Redux immediately
+  const TypingNumber = (e: React.ChangeEvent<HTMLInputElement>, type: 'current' | 'duration') => {
+    setField(type, e.target.valueAsNumber);
   };
 
+  // onBlur
+  const LeaveFocus = (type: 'current' | 'duration') => {
+    UpdateRedux(type, getField(type));
+  };
+
+  // onInputFocus (select all text)
   const onInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select();
   };
-
+  
+  // Spec Change
+  // const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, inputRef: React.RefObject<HTMLInputElement>, type: 'current' | 'duration') => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, type: 'current' | 'duration') => {
     if (e.key === 'Enter') {
       LeaveFocus(type);
@@ -78,56 +64,36 @@ export const PlayControls: React.FC = () => {
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       e.preventDefault();
       const increment = e.key === 'ArrowUp' ? STEP_TIME : -STEP_TIME;
-      const currentValue = type === 'current' ? fieldCurrent : fieldDuration;
-      const newValue = currentValue + increment;
-
+      const newValue = getField(type) + increment;
       UpdateRedux(type, newValue);
-
-      // Update local state to trigger re-render
-      if (type === 'current') {
-        setFieldCurrent(newValue);
-      } else {
-        setFieldDuration(newValue);
-      }
-
-      // Use setTimeout to maintain selection after state update
-      setTimeout(() => {
-        // Select the text in the input after updating
-        if (type === 'current' && currentInputRef.current) {
-          currentInputRef.current.select();
-        } else if (type === 'duration' && durationInputRef.current) {
-          durationInputRef.current.select();
-        }
-      }, 0);
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      setField(type, newValue); 
+      // Spec Change
+      //inputRef.current?.focus();
+      //inputRef.current?.select();
+    } else if (e.key === 'Escape') {
       e.preventDefault();
-    } else if ((e.key === 'Escape') || (typeof e.key === 'string' && isNaN(Number(e.key)) && e.key.length === 1)) {
-      if (type === 'current') {
-        setFieldCurrent(time_current);
-      } else {
-        setFieldDuration(time_duration);
-      }
+      setField(type, type === 'current' ? time_current : time_duration);
     }
   };
 
-  const handleInput = (e: React.FormEvent<HTMLInputElement>, type: 'current' | 'duration') => {
-    const input = e.target as HTMLInputElement;
-    const value = parseInt(input.value, 10);
-    
-    if (!isNaN(value) && input.validity.valid) {
-      if (type === 'current' && value !== fieldCurrent) {
-        UpdateRedux('current', value);
-        // Select the text in the input after updating
-        setFieldCurrent(value);
-        setTimeout(() => currentInputRef.current?.select(), 0);
-      } else if (type === 'duration' && value !== fieldDuration) {
-        UpdateRedux('duration', value);
-        // Select the text in the input after updating
-        setFieldDuration(value);
-        setTimeout(() => durationInputRef.current?.select(), 0);
-      }
+  // handleMouseUp to focus and select the input value
+  // Spec Change
+  // const handleMouseUp = (e: React.MouseEvent<HTMLInputElement>, inputRef: React.RefObject<HTMLInputElement>, type: 'current' | 'duration') => {
+  const handleMouseUp = (e: React.MouseEvent<HTMLInputElement>, type: 'current' | 'duration') => {
+    if(e.currentTarget.value){
+      // Spec Change
+      //inputRef.current?.focus();
+      //inputRef.current?.select();
+      //
+      UpdateRedux(type, getField(type));
     }
   };
+
+  // Spec Change
+  //
+  //  // Create refs for the inputs
+  // const currentInputRef = React.useRef<HTMLInputElement | null>(null);
+  // const durationInputRef = React.useRef<HTMLInputElement | null>(null);
 
   return (
     <div
@@ -137,7 +103,8 @@ export const PlayControls: React.FC = () => {
       <fieldset className="flex gap-1">
         Current
         <input
-          ref={currentInputRef}
+          // Spec Change
+          // ref={currentInputRef} 
           className="bg-gray-700 px-1 rounded"
           type="number"
           data-testid="current-time-input"
@@ -148,14 +115,19 @@ export const PlayControls: React.FC = () => {
           onChange={(e) => TypingNumber(e, 'current')}
           onBlur={() => LeaveFocus('current')}
           onFocus={onInputFocus}
+          
+          // Spec Change
+          // onKeyDown={(e) => handleKeyDown(e, currentInputRef, 'current')}
+          // onMouseUp={(e) => handleMouseUp(e, currentInputRef, 'current')}
           onKeyDown={(e) => handleKeyDown(e, 'current')}
-          onInput={(e) => handleInput(e, 'current')}
+          onMouseUp={(e) => handleMouseUp(e, 'current')}
         />
       </fieldset>
       -
       <fieldset className="flex gap-1">
         <input
-          ref={durationInputRef}
+          // Spec Change
+          // ref={durationInputRef}
           className="bg-gray-700 px-1 rounded"
           type="number"
           data-testid="duration-input"
@@ -166,8 +138,12 @@ export const PlayControls: React.FC = () => {
           onChange={(e) => TypingNumber(e, 'duration')}
           onBlur={() => LeaveFocus('duration')}
           onFocus={onInputFocus}
+          
+          // Spec Change
+          // onKeyDown={(e) => handleKeyDown(e, durationInputRef, 'duration')}
+          // onMouseUp={(e) => handleMouseUp(e, durationInputRef, 'duration')}
           onKeyDown={(e) => handleKeyDown(e, 'duration')}
-          onInput={(e) => handleInput(e, 'duration')}
+          onMouseUp={(e) => handleMouseUp(e, 'duration')}
         />
         Duration
       </fieldset>
